@@ -1,0 +1,10 @@
+[package]
+name = "TP2_HW"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cortex-m-rt = "0.7.3"
+
+[profile.release]
+panic = "abort"
