@@ -15,6 +15,8 @@ const CHOICED: *mut u8;
 const CHOICEP: *mut u8;
 const CHOICEPIN: *mut u8;
 
+//https://tenor.com/view/rust-femboy-rust-femboy-programming-rust-programming-gif-27321790
+
 #[entry]
 fn main() -> ! {
 
