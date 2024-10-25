@@ -3,7 +3,7 @@
 version = 3
 
 [[package]]
-name = "TP2_HW"
+name = "ProjetHW"
 version = "0.1.0"
 dependencies = [
  "cortex-m-rt",

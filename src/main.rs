@@ -2,6 +2,7 @@
 #![no_main]
 
 use cortex_m_rt::entry;
+use core::panic::PanicInfo;
 
 
 const PORTB: *mut u8 = 0x25 as *mut u8; // PORTB address
@@ -10,18 +11,23 @@ const PORTD: *mut u8 = 0x2B as *mut u8; // PORTD address
 const DDRD: *mut u8 = 0x2A as *mut u8;  // DDRD address
 const PINB: *mut u8 = 0x23 as *mut u8;  //PINB address
 const PIND: *mut u8 = 0x29 as *mut u8;  //PIND address
-const SOURCE: *mut u8 = 0b00000001 as *mut u8;  // SOURCE (chosen port, will change in the switch) 
-const CHOICED: *mut u8;
-const CHOICEP: *mut u8;
-const CHOICEPIN: *mut u8;
+static mut SOURCE: u8 = 0b00000001;
+static mut CHOICED: *mut u8 = DDRB as *mut u8;
+static mut CHOICEP: *mut u8 = PORTB as *mut u8;
+static mut CHOICEPIN: *mut u8 = PIND as *mut u8;
+
+static mut LED_STATE: bool = false;  
+static mut BUTTON_STATE: bool =false;
 
 //https://tenor.com/view/rust-femboy-rust-femboy-programming-rust-programming-gif-27321790
 
 #[entry]
 fn main() -> ! {
 
-    let num=3;
-    match num{
+    let num=13;
+    unsafe{
+    match num{  //switch which gives for the output a value to the PORT, DDR, PIN and SOURCE depending on the number of the GPIO port chosen hard 
+
      0=>{SOURCE = 0b00000001;CHOICED = DDRD; CHOICEP = PORTD; CHOICEPIN = PIND;},   
      1=>{SOURCE = 0b00000010;CHOICED = DDRD; CHOICEP = PORTD; CHOICEPIN = PIND;},
      2=>{SOURCE = 0b00000100;CHOICED = DDRD; CHOICEP = PORTD; CHOICEPIN = PIND;},
@@ -36,35 +42,26 @@ fn main() -> ! {
      11=>{SOURCE = 0b00001000;CHOICED = DDRB; CHOICEP = PORTB; CHOICEPIN = PINB;},
      12=>{SOURCE = 0b00010000;CHOICED = DDRB; CHOICEP = PORTB; CHOICEPIN = PINB;},
      13=>{SOURCE = 0b00100000;CHOICED = DDRB; CHOICEP = PORTB; CHOICEPIN = PINB;},
-     _=>println!("Raté"),
+     _=>panic!("Raté"),
     }
-    loop {
-        unsafe {
-        // Infinite loop
-            loop {
-            // Turn on the LED (set bit 5 in PORTB)
-                core::ptr::write_volatile(CHOICED,SOURCE);
-            /*loop {
-                for _ in 0..1_000_000 
-                {
-                    core::ptr::write_volatile(PORTB, 0b00100000);
-                }
-                for _ in 0..100_000
-                {
-                    core::ptr::write_volatile(PORTB, 0b00000000);
-                }
-            }*/
-                let pinb = core::ptr::read_volatile(PINB);
-                let port13_high = pinb & 0b00100000; // Vérifier si PB5 (bit 5) est à 1
+    core::ptr::write_volatile(CHOICED,SOURCE);  //set the source port mode as output
 
-                if port13_high != 0 {
-                    // Si port 13 est HIGH, mettre port 12 (PB4) à HIGH
-                    core::ptr::write_volatile(CHOICEP, SOURCE); // PB4 = 1
-                } else {
-                    // Sinon, mettre port 12 (PB4) à LOW
-                    core::ptr::write_volatile(CHOICEP, 0b00000000); // PB4 = 0
-                }
+    loop {
+        BUTTON_STATE = (*PIND & 0b00000100) != 0; //set the variable to true or false depending on if the button is pressed, if it is pressed it is true
+        // the input is set on port 2 on the Arduino
+        if BUTTON_STATE { 
+            LED_STATE = !LED_STATE; //change the boolean of the variable
+            if LED_STATE { 
+                core::ptr::write_volatile(CHOICEP, SOURCE); //turn on the led
             }
+            else {
+                core::ptr::write_volatile(CHOICEP,0b00000000); //turn off the led
+            }
+
+            while (*PIND & 0b00000100) != 0 {} //wait for the user to stop pressing the button
+            core::ptr::write_volatile(CHOICEP,0b00000000); //turn off the led
+        }
+            
         }
     }
 }
