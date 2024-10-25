@@ -1,3 +1,18 @@
 Projet fait en trinome avec Clément Roumilhac, Aurélien Roumégoux et Fabrice Renault
 
-Premier rendu non finit.
+Premier rendu finit.
+
+Compilation:
+cargo +nightly build -Z build-std=core --target avr-unknown-gnu-atmega328 --release
+$files = Get-Content -Path "files.txt"  
+& "C:\Users\clemr\AppData\Local\Arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\bin\avr-gcc.exe" -mmcu=atmega328 -o output.elf $files
+& "C:\Users\clemr\AppData\Local\Arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\bin\avr-objcopy.exe" -O ihex .\output.elf output.hex 
+& "C:\Users\clemr\AppData\Local\Arduino15\packages\arduino\tools\avrdude\6.3.0-arduino17\bin\avrdude.exe" -C "C:\Users\clemr\AppData\Local\Arduino15\packages\arduino\tools\avrdude\6.3.0-arduino17\etc\avrdude.conf" ` -v -p atmega328p -c arduino -P COM7 -b 115200 -U flash:w:output.hex:i
+
+Nous utilisons un fichier files.txt pour inclure tous les fichier .rlib et .o que nous devons utiliser pour link car les *.rlib et les *.o ne fonctionnent pas pour nous.
+
+Nous avons un fichier Makefile mais qui ne fonctionne pas pour l'instant cer il s'arrete après l'erreur de link.
+
+Notre objectif était d'allumer une LED lorsque l'on presse un bouton, malheureusement probablement dû au montage, nous n'avons pas réussi à faire fonctionner le bouton.
+
+Le port de la LED est choisit sur un int, qui lors d'un switch permet de modifier les valeurs des registres, tandis que le port d'entrée du bouton est choisit directement en dur.

@@ -19,7 +19,6 @@ static mut CHOICEPIN: *mut u8 = PIND as *mut u8;
 static mut LED_STATE: bool = false;  
 static mut BUTTON_STATE: bool =false;
 
-//https://tenor.com/view/rust-femboy-rust-femboy-programming-rust-programming-gif-27321790
 
 #[entry]
 fn main() -> ! {
