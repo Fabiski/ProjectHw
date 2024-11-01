@@ -16,3 +16,8 @@ Nous avons un fichier Makefile mais qui ne fonctionne pas pour l'instant cer il 
 Notre objectif était d'allumer une LED lorsque l'on presse un bouton, malheureusement probablement dû au montage, nous n'avons pas réussi à faire fonctionner le bouton.
 
 Le port de la LED est choisit sur un int, qui lors d'un switch permet de modifier les valeurs des registres, tandis que le port d'entrée du bouton est choisit directement en dur.
+
+
+[CORRECTION GPIO] (Don't hesitate to remove this part)
+You should abstract the Atmega328p hardware, with generic function, just like an HAL do (not in the main.rs for example). Make function that could be called by the user without them worrying about the hardware specification.
+Consider subdividing your project into separate modules. 
