@@ -20,4 +20,6 @@ Le port de la LED est choisit sur un int, qui lors d'un switch permet de modifie
 
 [CORRECTION GPIO] (Don't hesitate to remove this part)
 You should abstract the Atmega328p hardware, with generic function, just like an HAL do (not in the main.rs for example). Make function that could be called by the user without them worrying about the hardware specification.
-Consider subdividing your project into separate modules. 
+Consider subdividing your project into separate modules.
+
+
