@@ -4,6 +4,7 @@
 use cortex_m_rt::entry;
 use core::panic::PanicInfo;
 
+// Import the GPIO and USART modules
 mod gpio;
 mod usart;
 
@@ -15,7 +16,7 @@ fn main() -> ! {
     // Initialize USART
     usart::init_usart(9600);
 
-    loop {
+    loop {  
         // Read from USART
         let received_data = usart::receive();
 

@@ -23,3 +23,13 @@ You should abstract the Atmega328p hardware, with generic function, just like an
 Consider subdividing your project into separate modules.
 
 
+Pour ce deuxième rendu , notre objectif a été d'implémenter la fonctionnalité USART pour l'Atmega328p et un autre microcontrôleur de notre choix.
+
+Cette fonctionnalité a permis la communication série bidirectionnelle entre les microcontrôleurs.
+
+Nous avons pris les détails matériels de l'Atmega328p et du second microcontrôleur pour permettre une utilisation transparente de la fonctionnalité USART.
+
+Nous avons implémenté les fonctions de transmission et de réception de données via USART.
+
+Nous avons structuré le projet en modules distincts pour une meilleure organisation et compréhension du code.
+
