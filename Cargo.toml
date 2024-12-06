@@ -8,3 +8,7 @@ cortex-m-rt = "0.7.3"
 
 [profile.release]
 panic = "abort"
+
+[features]
+arduino = []
+teensy = []

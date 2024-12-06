@@ -8,6 +8,26 @@ use core::panic::PanicInfo;
 mod gpio;
 mod usart;
 
+#[cfg(feature = "arduino")]
+mod gpio {
+    include!("gpio.rs");
+}
+
+#[cfg(feature = "teensy")]
+mod gpio {
+    include!("gpio_cortex.rs");
+}
+
+#[cfg(feature = "arduino")]
+mod usart {
+    include!("usart.rs");
+}
+
+#[cfg(feature = "teensy")]
+mod usart {
+    include!("usart_cortex.rs");
+}
+
 #[entry]
 fn main() -> ! {
     // Initialize GPIO
