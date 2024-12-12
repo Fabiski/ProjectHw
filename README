@@ -33,3 +33,7 @@ Nous avons implémenté les fonctions de transmission et de réception de donné
 
 Nous avons structuré le projet en modules distincts pour une meilleure organisation et compréhension du code.
 
+
+Pour ce troisième rendu, nous avons implémenté le spi sur l'ATMEGA ainsi que sur le cortex-3M. Nous avons aussi rajouté les fichiers GPIO et USART pour la cortex-3M.
+Ce read-me est modifié après la deadline car nous avons oublié de le remplir, mais les commits sur les fichiers ont bien été faits avant.
+
