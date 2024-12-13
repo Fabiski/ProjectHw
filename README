@@ -33,3 +33,7 @@ Nous avons implémenté les fonctions de transmission et de réception de donné
 
 Nous avons structuré le projet en modules distincts pour une meilleure organisation et compréhension du code.
 
+
+[CORRECTION USART] (Don't hesitate to remove this part)
+For this : "Nous avons un fichier Makefile mais qui ne fonctionne pas pour l'instant cer il s'arrete après l'erreur de link.", try doing "- cargo +nightly..." instead of "cargo +nightly..."
+One target is missing !
