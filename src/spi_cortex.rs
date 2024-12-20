@@ -22,22 +22,34 @@ pub mod spi {
 
     pub fn init_master() {
         unsafe {
-            ptr::write_volatile(SPI1_CR1, (1 << 6) | // SPE: SPI Enable
-                                            (1 << 2) | // MSTR: Master Selection
-                                            (3 << 3)); // BR: Baud Rate Control (f_PCLK / 16)
-
-            ptr::write_volatile(SPI1_CR2, 0);
+            ptr::write_volatile(
+                SPI1_CR1,
+                    (1 << 2)  // MSTR: Master mode
+                    | (3 << 3)  // BR[2:0]: Baud rate = fPCLK/16
+                    | (0 << 7)  // CPOL: Clock polarity low
+                    | (0 << 6)  // CPHA: Clock phase 1st edge
+                    | (0 << 11) // DFF: 8-bit data frame
+                    | (1 << 9)  // SSM: Software NSS management
+                    | (1 << 8) // SSI: Internal NSS high
+                    | (1 << 10), // RXONLY = 0, full-duplex
+            );
         }
     }
 
+
     pub fn init_slave() {
         unsafe {
-            ptr::write_volatile(SPI1_CR1, (1 << 6) |  // SPE: SPI Enable
-                                  (0 << 2) |  // MSTR: Master Selection (
-                                  (3 << 3));  // BR: Baud Rate Control (f_PCLK / 16)
-    
-   
-            ptr::write_volatile(SPI1_CR2, 0);
+            ptr::write_volatile(
+                SPI1_CR1,
+                    (0 << 2)  // MSTR: Master mode (slave)
+                    | (3 << 3)  // BR[2:0]: Baud rate = fPCLK/16
+                    | (0 << 7)  // CPOL: Clock polarity low
+                    | (0 << 6)  // CPHA: Clock phase 1st edge
+                    | (0 << 11) // DFF: 8-bit data frame
+                    | (1 << 9)  // SSM: Software NSS management
+                    | (1 << 8) // SSI: Internal NSS high
+                    | (1 << 10), // RXONLY = 0, full-duplex
+            );
         }
     }
     
