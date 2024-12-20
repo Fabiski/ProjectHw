@@ -40,38 +40,86 @@ mod spi {
 
 #[entry]
 fn main() -> ! {
-    // Initialize GPIO
+
+    #[cfg(feature = "arduino")]
     gpio::configure_pin(13, true); // Set pin 13 as output
 
-    // Initialize USART
+    #[cfg(feature = "teensy")]
+    gpio::configure_pin(13, true); // Set pin 13 as output
+
+    // Platform-specific USART initialization
+    #[cfg(feature = "arduino")]
     usart::init_usart(9600);
 
-    // Initialize SPI
+    #[cfg(feature = "teensy")]
+    usart::init_usart(9600);
+
+    // Platform-specific SPI initialization
+    #[cfg(feature = "arduino")]
+    spi::init_spi();
+
+    #[cfg(feature = "teensy")]
     spi::init_spi();
 
     loop {
         // Read from USART
+        #[cfg(feature = "arduino")]
+        let received_data = usart::receive();
+
+        #[cfg(feature = "teensy")]
         let received_data = usart::receive();
 
         // Toggle LED based on received data
+        #[cfg(feature = "arduino")]
         if received_data == b'1' {
             gpio::write_pin(13, true);
         } else if received_data == b'0' {
             gpio::write_pin(13, false);
         }
 
+        #[cfg(feature = "teensy")]
+        if received_data == b'1' {
+            gpio::write_pin(13, true);
+        } else if received_data == b'0' {
+            gpio::write_pin(13, false);
+        }
         // Transmit data back over USART
+        #[cfg(feature = "arduino")]
+        usart::transmit(received_data);
+
+        #[cfg(feature = "teensy")]
         usart::transmit(received_data);
 
         // SPI Communication: Send a byte (e.g., 0x55) and receive the response
         let data_to_send = 0x55;
-        spi::transmit(data_to_send);  // Send data via SPI
-        let received_spi_data = spi::receive();  // Receive data via SPI
 
-        // Do something with the received SPI data
-        if received_spi_data == 0x55 {
-            gpio::write_pin(13, true);  // Turn on LED if SPI data matches
+        // Platform-specific USART transmit
+        #[cfg(feature = "arduino")]
+        usart::transmit(received_data);
+
+        #[cfg(feature = "teensy")]
+        usart::transmit(received_data);
+
+        #[cfg(feature = "arduino")]
+        {
+            let received_spi_data = spi::receive();  // Receive data via SPI
+
+            // Do something with the received SPI data
+            if received_spi_data == 0x55 {
+                gpio::write_pin(13, true);  // Turn on LED if SPI data matches
+            }
         }
+
+        #[cfg(feature = "teensy")]
+        {
+            let received_spi_data = spi::receive();  // Receive data via SPI
+
+            // Do something with the received SPI data
+            if received_spi_data == 0x55 {
+                gpio::write_pin(13, true);  // Turn on LED if SPI data matches
+            }
+        }
+        
         /*
         [CORRECTION SPI] (don't hesitate to remove this part)
         You have this type of compilation's error :
