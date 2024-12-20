@@ -20,6 +20,28 @@ pub mod spi {
         }
     }
 
+    pub fn init_master() {
+        unsafe {
+            ptr::write_volatile(SPI1_CR1, (1 << 6) | // SPE: SPI Enable
+                                            (1 << 2) | // MSTR: Master Selection
+                                            (3 << 3)); // BR: Baud Rate Control (f_PCLK / 16)
+
+            ptr::write_volatile(SPI1_CR2, 0);
+        }
+    }
+
+    pub fn init_slave() {
+        unsafe {
+            ptr::write_volatile(SPI1_CR1, (1 << 6) |  // SPE: SPI Enable
+                                  (0 << 2) |  // MSTR: Master Selection (
+                                  (3 << 3));  // BR: Baud Rate Control (f_PCLK / 16)
+    
+   
+            ptr::write_volatile(SPI1_CR2, 0);
+        }
+    }
+    
+
     pub fn transmit(data: u8) {
         unsafe {
             // Wait until the transmit buffer is empty
