@@ -7,7 +7,10 @@ all: build compile upload
 # Build the project for the AVR target
 build:
 	cargo +nightly build -Z build-std=core --target avr-unknown-gnu-atmega328 --release
-	@echo "Rust compilation finished."
+	@echo "Rust compilation finished for atmega328."
+
+	cargo +nightly build -Z build-std=core --target thumbv7m-none-eabi --release
+	@echo "Rust compilation finished for cortex-3m."
 
 # Compile the generated ELF to HEX
 compile:
