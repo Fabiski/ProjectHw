@@ -72,6 +72,27 @@ fn main() -> ! {
         if received_spi_data == 0x55 {
             gpio::write_pin(13, true);  // Turn on LED if SPI data matches
         }
+        /*
+        [CORRECTION SPI] (don't hesitate to remove this part)
+        You have this type of compilation's error :
+
+            error[E0425]: cannot find function `write_pin` in module `gpio`
+              --> src/main.rs:73:19
+               |
+            73 |             gpio::write_pin(13, true);  // Turn on LED if SPI data matches
+               |                   ^^^^^^^^^ not found in `gpio`
+               |
+            help: consider importing this function
+               |
+            4  + use crate::gpio::gpio::write_pin;
+
+        Even though everything should be fine (you put everything in public for example) : 
+        This is because your function's declaration are guarded by features ("atmega" and "teensy"), but their call are not.
+        To solve this you could : 
+            - guard the call by features as well
+            - make more generic function's declaration, and specify your target more precise function under it, with features
+        In your case, the first option seems like the best one 
+        */
     }
 }
 

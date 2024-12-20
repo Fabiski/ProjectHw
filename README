@@ -39,3 +39,9 @@ Ce read-me est modifié après la deadline car nous avons oublié de le remplir,
 [CORRECTION USART] (Don't hesitate to remove this part)
 For this : "Nous avons un fichier Makefile mais qui ne fonctionne pas pour l'instant cer il s'arrete après l'erreur de link.", try doing "- cargo +nightly..." instead of "cargo +nightly..."
 One target is missing !
+
+
+
+[CORRECTION SPI] (don't hesitate to remove this part)
+You could implement the controler/master mode and the peripheral/slave mode.
+You could abstract more the register content, for example 0x34 is not very precise, you may want to customize your parameters more accurately (therefore you could use more freely CPOL, CPHA, BR, MSTR...).
