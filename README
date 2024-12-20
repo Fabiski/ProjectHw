@@ -2,13 +2,6 @@ Projet fait en trinome avec Clément Roumilhac, Aurélien Roumégoux et Fabrice 
 
 Premier rendu finit.
 
-Compilation:
-cargo +nightly build -Z build-std=core --target avr-unknown-gnu-atmega328 --release
-$files = Get-Content -Path "files.txt"  
-& "C:\Users\clemr\AppData\Local\Arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\bin\avr-gcc.exe" -mmcu=atmega328 -o output.elf $files
-& "C:\Users\clemr\AppData\Local\Arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\bin\avr-objcopy.exe" -O ihex .\output.elf output.hex 
-& "C:\Users\clemr\AppData\Local\Arduino15\packages\arduino\tools\avrdude\6.3.0-arduino17\bin\avrdude.exe" -C "C:\Users\clemr\AppData\Local\Arduino15\packages\arduino\tools\avrdude\6.3.0-arduino17\etc\avrdude.conf" ` -v -p atmega328p -c arduino -P COM7 -b 115200 -U flash:w:output.hex:i
-
 Nous utilisons un fichier files.txt pour inclure tous les fichier .rlib et .o que nous devons utiliser pour link car les *.rlib et les *.o ne fonctionnent pas pour nous.
 
 Nous avons un fichier Makefile mais qui ne fonctionne pas pour l'instant cer il s'arrete après l'erreur de link.
@@ -17,6 +10,7 @@ Notre objectif était d'allumer une LED lorsque l'on presse un bouton, malheureu
 
 Le port de la LED est choisit sur un int, qui lors d'un switch permet de modifier les valeurs des registres, tandis que le port d'entrée du bouton est choisit directement en dur.
 
+Pour la compilation: se référer au MAKEFILE.
 
 [CORRECTION GPIO] (Don't hesitate to remove this part)
 You should abstract the Atmega328p hardware, with generic function, just like an HAL do (not in the main.rs for example). Make function that could be called by the user without them worrying about the hardware specification.
@@ -40,8 +34,12 @@ Ce read-me est modifié après la deadline car nous avons oublié de le remplir,
 For this : "Nous avons un fichier Makefile mais qui ne fonctionne pas pour l'instant cer il s'arrete après l'erreur de link.", try doing "- cargo +nightly..." instead of "cargo +nightly..."
 One target is missing !
 
-
+Nous avons modifié notre makefile pour y inclure la seconde target: thumbv7m-none-eabi, et en essayant votre méthode de faire "- cargo +nightly..." au lieu "cargo +nightly..."
+malheureusement, cela n'a pas abouti mais nous avons su nous rapprocher d'une solution fonctionnelle.
 
 [CORRECTION SPI] (don't hesitate to remove this part)
 You could implement the controler/master mode and the peripheral/slave mode.
 You could abstract more the register content, for example 0x34 is not very precise, you may want to customize your parameters more accurately (therefore you could use more freely CPOL, CPHA, BR, MSTR...).
+
+Nous avons choisit la première solution que vous nous avez proposé, c'est à dire de mettre des cfg feature sur tous les appels de fonctions présentes dans l'une de nos deux target.
+Pour les spis, nous avons implementé le mode master et le mode slave pour chacune de nos carte, tout en initialisant les différents registres du spi séparément, et pas avec une valeur héxadécimal.

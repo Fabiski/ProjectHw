@@ -12,3 +12,7 @@ panic = "abort"
 [features]
 arduino = []
 teensy = []
+
+[build]
+target = "avr-unknown-gnu-atmega328" 
+target2 = "thumbv7m-none-eabi"

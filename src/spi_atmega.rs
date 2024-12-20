@@ -5,17 +5,40 @@ use core::panic::PanicInfo;
 
 #[cfg(feature = "arduino")]
 pub mod spi {
-    const SPCR: *mut u8 = 0x2C as *mut u8;  // SPI Control Register
-    const SPSR: *mut u8 = 0x2E as *mut u8;  // SPI Status Register
-    const SPDR: *mut u8 = 0x2F as *mut u8;  // SPI Data Register
-    const PINB: *mut u8 = 0x23 as *mut u8;  // Port B input register
+    const SPCR: *mut u8 = 0x4C as *mut u8;  // SPI Control Register
+    const SPSR: *mut u8 = 0x4E as *mut u8;  // SPI Status Register
+    const SPDR: *mut u8 = 0x4F as *mut u8;  // SPI Data Register
 
-    pub fn init_spi() {
+
+    pub fn init_master() {
         unsafe {
-            // Set SPI to Master mode, enable SPI, set clock polarity and phase, and baud rate
-            core::ptr::write_volatile(SPCR, 0x53);  // Example: SPI mode setup
+            core::ptr::write_volatile(
+                SPCR,
+                (1 << 6)  // SPE: SPI Enable (active)
+                | (1 << 4)  // MSTR: Master (mode maître)
+                | (0 << 3)  // CPOL: Clock Polarity low (0)
+                | (0 << 2)  // CPHA: Clock Phase 1st edge (0)
+                | (0 << 1)  // SPR1: Clock Rate Select bit 1 (f_CPU / 4)
+                | (1 << 0)  // SPR0: Clock Rate Select bit 0 (f_CPU / 4)
+            );
         }
     }
+    
+    pub fn init_slave() {
+        unsafe {
+            core::ptr::write_volatile(
+                SPCR,
+                (1 << 6)  // SPE: SPI Enable (active)
+                | (0 << 4)  // MSTR: Master (mode esclave)
+                | (0 << 3)  // CPOL: Clock Polarity low (0)
+                | (0 << 2)  // CPHA: Clock Phase 1st edge (0)
+                | (0 << 1)  // SPR1: Clock Rate Select bit 1 (f_CPU / 4)
+                | (1 << 0)  // SPR0: Clock Rate Select bit 0 (f_CPU / 4)
+            );
+        }
+    }
+
+
 
     pub fn transmit(data: u8) {
         unsafe {
